@@ -1,4 +1,4 @@
-# Free API with Ollama through Colab and use in OpenCode
+# Free API with Ollama through Colab and use in OpenCode <!-- v2 -->
 
 ## The Problem
 
