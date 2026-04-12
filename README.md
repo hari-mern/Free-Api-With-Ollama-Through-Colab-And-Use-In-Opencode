@@ -1,141 +1,138 @@
-# Free API with Ollama through Colab and use in OpenCode <!-- v2 -->
+# Free Ollama API via Colab for OpenCode
 
-## The Problem
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Working-green?style=flat" alt="Status">
+  <img src="https://img.shields.io/badge/Cost-100%25%20Free-brightgreen?style=flat" alt="Cost">
+  <img src="https://img.shields.io/badge/License-MIT-blue?style=flat" alt="License">
+</p>
 
-I have a **weak/low-spec PC** (no GPU, slow CPU, limited RAM) but want to use AI to help with coding. Running LLMs locally is too slow or impossible on my machine.
+> **Problem:** I have a weak/low-spec PC but want AI to help with coding.
+>
+> **Solution:** Run powerful LLMs on Google Colab (free GPU), expose via Cloudflare Tunnel, use in OpenCode - completely free!
 
-## The Solution
+---
 
-Run powerful LLMs on **Google Colab** (free GPU!), expose the API via **Cloudflare Tunnel**, and use it in **OpenCode** - completely free!
+## Why This?
+
+| Your PC | With This Setup |
+|---------|----------------|
+| No GPU / Slow CPU | Uses Colab's free GPU |
+| Can't run LLMs | 3 powerful models tested |
+| Expensive API costs | 100% free forever |
+| Limited to code snippets | Actually executes tools |
+
+---
+
+## How It Works
+
+```
+┌─────────────┐     ┌───────────────────┐     ┌──────────────┐     ┌─────────┐
+│   Your PC   │────▶│  Cloudflare       │────▶│   Google    │────▶│   LLM   │
+│  (OpenCode) │     │  Tunnel (Public)  │     │   Colab     │     │ (Qwen3) │
+└─────────────┘     └───────────────────┘     └──────────────┘     └─────────┘
+     ▲                                                              │
+     │                                                              │
+     └──────────────────────────────────────────────────────────────┘
+                              OpenCode AI Response
+```
 
 ---
 
 ## Quick Setup (3 Steps)
 
-### Step 1: Run Notebook on Google Colab
+### Step 1: Run on Google Colab
 
 1. Go to [Google Colab](https://colab.research.google.com)
 2. Click **New Notebook**
-3. Copy all code from `opencode_final.ipynb` and paste into cells
-4. **Important - Enable GPU:**
-   - Click **Runtime** > **Change runtime type**
-   - Select **T4 GPU** (or any GPU available)
-   - Click **SAVE**
-5. Run all cells sequentially
-6. Wait for tunnel URL output (looks like `https://xxxx.trycloudflare.com`)
+3. Upload or copy code from `opencode_final.ipynb`
+4. **Enable GPU:**
+   - Go to **Runtime** → **Change runtime type**
+   - Select **T4 GPU** → Click **SAVE**
+5. Run all cells
+6. Wait for tunnel URL (appears as `https://xxx.trycloudflare.com`)
 
 ### Step 2: Get Your API URL
 
-The notebook will output a URL like:
 ```
-https://random-name.trycloudflare.com
-```
-
-**Add `/v1` at the end** to get your API URL:
-```
-https://random-name.trycloudflare.com/v1
+Output: https://random-name.trycloudflare.com
+        └────────── Add /v1 ──────────┘
+API URL: https://random-name.trycloudflare.com/v1
 ```
 
-Copy this URL - you'll need it for OpenCode config!
+Copy this! You'll need it for config.
 
 ### Step 3: Configure OpenCode
 
-**On your PC:**
+On your PC:
 
-1. Create folder: `C:\Users\<YOUR-USERNAME>\.config\opencode\`
-2. Copy `opencode.json` to that folder
-3. Open `opencode.json` in a text editor
-4. Replace `YOUR-TUNNEL-URL` with your actual URL from Step 2
-5. Copy `AGENTS.md` to the same folder
-
----
-
-## Colab Configuration Details
-
-### How to Enable GPU (T4):
-
-1. Open your Colab notebook
-2. Click **Runtime** (top menu)
-3. Click **Change runtime type**
-4. Under "Hardware accelerator" - select **T4 GPU**
-5. Click **SAVE**
-6. Run your cells
-
-### Runtime Types Available:
-
-| Runtime | GPU | Memory | Notes |
-|---------|-----|--------|-------|
-| T4 | 16GB | ~16GB | ✅ Recommended |
-| V100 | 32GB | ~32GB | May not be available |
-| A100 | 40GB | ~40GB | Rarely available |
-| CPU | None | ~12GB | ❌ Too slow for LLMs |
-
-### If T4 not available:
-
-- Wait a few minutes and try again
-- Colab free tier allocates GPUs dynamically
-- Try at different times of day
+```
+1. Create folder: C:\Users\<YOU>\.config\opencode\
+2. Copy opencode.json to that folder
+3. Replace YOUR-TUNNEL-URL with your actual URL
+4. Copy AGENTS.md to the same folder
+5. Start OpenCode and enjoy! 🎉
+```
 
 ---
 
-## 3 Working Models (Tested & Verified)
+## 3 Tested Models
 
-| Model | Context | Best For |
-|-------|---------|----------|
-| qwen3.5-9b-32k | 32K | **BEST** - Fast, great coding |
-| qwen3-8b-32k | 32K | Good alternative |
-| gemma4-e4b-32k | 32K | Slower, better errors |
+| Model | Context | Notes |
+|-------|---------|-------|
+| `qwen3.5-9b-32k` | 32K | **BEST** - Fast, great code generation |
+| `qwen3-8b-32k` | 32K | Good alternative |
+| `gemma4-e4b-32k` | 32K | Slower but better error messages |
 
-All 3 models support tool calling in OpenCode!
+All 3 support tool calling in OpenCode!
 
 ---
 
-## Files Included
+## Files
 
-| File | Description |
-|------|-------------|
-| `opencode_final.ipynb` | Main Colab notebook |
-| `opencode.json` | OpenCode config template |
-| `AGENTS.md` | System prompt |
-| `README.md` | This file |
+```
+├── opencode_final.ipynb  # Main Colab notebook (run this)
+├── opencode.json        # OpenCode config template
+├── AGENTS.md         # System prompt
+├── LICENSE          # MIT License
+└── README.md        # This file
+```
 
 ---
 
 ## Troubleshooting
 
-| Problem | Solution |
-|---------|----------|
-| Tunnel URL not showing | Wait 60 seconds, make sure GPU is enabled |
-| Out of memory error | Use only 1-2 models instead of 3 |
-| Connection refused | Re-run notebook (Colab session may have expired) |
-| Model not executing tools | Make sure URL ends with `/v1` |
-| Ollama not responding | Run `!pkill ollama` then restart |
+| Problem | Fix |
+|---------|-----|
+| Tunnel URL not showing | Wait 60s, enable T4 GPU first |
+| Out of memory | Use only 1-2 models |
+| Connection refused | Re-run notebook (session expired) |
+| Tools not executing | Make sure URL ends with `/v1` |
+| Ollama not responding | Run `!pkill ollama` in new cell |
 
 ---
 
-## How It Works (Technical)
+## Important Notes
 
-```
-Your PC (OpenCode)
-       |
-       v
-Cloudflare Tunnel (free public URL)
-       |
-       v
-Google Colab (free GPU + Ollama)
-       |
-       v
-LLM (Qwen3.5-9B / Qwen3-8B / Gemma4)
-```
+### For Users (Copy & Read)
+
+- **Keep Colab running** - Tunnel works only while Colab is active
+- **Use `/v1`** - API won't work without this suffix
+- **GPU required** - CPU too slow for LLMs
+- **Get fresh URL each session** - Old URLs expire
+
+### Contributing
+
+Found a bug or improvement? Open an issue or pull request!
 
 ---
 
-## Cost: **$0**
+## Cost: $0
 
 - Google Colab Free: ✅
-- Cloudflare Tunnel: ✅
+- Cloudflare Tunnel: ✅  
 - Ollama: ✅
 - OpenCode: ✅
+- This repo: ✅
 
 Everything is free forever!
 
@@ -145,11 +142,17 @@ Everything is free forever!
 
 - [Ollama](https://ollama.com) - Local LLM runtime
 - [OpenCode](https://opencode.ai) - AI coding assistant
-- [Cloudflare](https://cloudflare.com) - Free tunnel service
+- [Cloudflare](https://cloudflare.com) - Free tunnel
 - [Google Colab](https://colab.research.google.com) - Free GPU
 
 ---
 
 ## License
 
-Free to use, modify, and share!
+MIT License - See [LICENSE](LICENSE) file.
+
+---
+
+<p align="center">
+⭐ Star this repo if it helped you! ⭐
+</p>
